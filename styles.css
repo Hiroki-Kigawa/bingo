@@ -87,28 +87,19 @@ button:disabled { cursor: not-allowed; }
 .title {
   margin: 0;
   text-align: center;
-  line-height: 1.15;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
-.title-sub {
-  display: inline-block;
-  font-size: clamp(1rem, 4vw, 1.6rem);
-  color: var(--white);
-  background: var(--purple);
-  padding: 0.3em 1em;
-  border-radius: 999px;
-  transform: rotate(-3deg);
-  margin-bottom: 12px;
-}
-.title-main {
+/* メインビジュアル（横長画像）。PCでも入力欄が画面内に収まるよう、幅は画面の高さにも合わせて抑える */
+.main-visual {
   display: block;
-  font-size: clamp(2rem, 12vw, 6rem);
-  white-space: nowrap;
-  font-weight: 800;
-  color: var(--pink);
-  -webkit-text-stroke: 3px var(--white);
-  paint-order: stroke fill;
-  text-shadow: 0 6px 0 var(--pink-dark);
-  letter-spacing: 0.04em;
+  /* 画面の高さから入力欄と余白のぶん（約540px）を引いた高さに収まる幅。極端に小さくはしない */
+  width: min(100%, 900px, max(320px, calc((100dvh - 540px) * 1.91)));
+  height: auto;
+  border-radius: var(--radius);
+  border: 5px solid var(--white);
+  box-shadow: 0 8px 0 rgba(58, 42, 77, 0.12);
 }
 
 .panel {
