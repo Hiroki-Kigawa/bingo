@@ -156,6 +156,23 @@ button:disabled { cursor: not-allowed; }
   display: flex;
   flex-direction: column;
   gap: 16px;
+  isolation: isolate;
+}
+
+/* 背景のキャラクター。画面に固定し、ボタンやパネルの後ろに置く */
+.bg-charas {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-chara {
+  position: absolute;
+  height: auto;
+  opacity: 0.9;
+  translate: -50% -50%;
+  user-select: none;
 }
 
 .game-header {
@@ -173,6 +190,10 @@ button:disabled { cursor: not-allowed; }
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* 背景のキャラクターと重なっても読めるように */
+  background: var(--white);
+  padding: 0.2em 1em;
+  border-radius: 999px;
 }
 /* 狭い画面では見出しを省き、ボタンを優先する */
 @media (max-width: 599px) {
@@ -226,7 +247,15 @@ button:disabled { cursor: not-allowed; }
   100% { transform: scale(1); }
 }
 
-.remaining { margin: 4px 0 0; font-weight: 800; font-size: 1.1rem; }
+.remaining {
+  margin: 4px 0 0;
+  font-weight: 800;
+  font-size: 1.1rem;
+  /* 背景のキャラクターと重なっても読めるように */
+  background: var(--white);
+  padding: 0.2em 1em;
+  border-radius: 999px;
+}
 
 .btn-spin {
   min-width: 220px;

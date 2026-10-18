@@ -8,6 +8,17 @@ const DEFAULT_RANGE = { min: 1, max: 75 };
 const SPIN_INTERVAL_MS = 60;       // 回転中に数字を切り替える間隔
 const DECEL_STEPS = 12;            // 減速しながら止まるまでの切り替え回数
 const DECEL_EXTRA_MS = 260;        // 減速の最後の1コマで追加される待ち時間
+const CHARA_IMAGES = [             // ゲーム画面の背景に散りばめる画像
+  'images/chara-1.png',
+  'images/chara-2.png',
+  'images/chara-3.png',
+  'images/chara-4.png',
+  'images/chara-5.png',
+  'images/chara-6.png',
+  'images/chara-7.png',
+  'images/chara-8.png',
+];
+const CHARA_CELL_RATIO = 0.14;     // 背景の格子1マスの大きさ（画面の短い辺に対する割合）
 
 /* ===== 状態 =====
  * game: 進行中のゲーム { min, max, drawn: 出た順の番号 } または null
@@ -37,6 +48,7 @@ const el = {
   history: $('history'),
   historyEmpty: $('history-empty'),
   drawnCount: $('drawn-count'),
+  bgCharas: $('bg-charas'),
 };
 
 /* ===== 保存・読み込み ===== */
@@ -255,7 +267,35 @@ function updateHistoryMeta() {
   el.historyEmpty.hidden = count > 0;
 }
 
+// 背景にキャラクターをランダムに散りばめる。
+// 画面を格子に分けて各マスに1体ずつ置くことで、偏らずに全体へ散らばるようにする
+function scatterCharas() {
+  const { innerWidth: w, innerHeight: h } = window;
+  const cell = Math.min(w, h) * CHARA_CELL_RATIO;
+  const cols = Math.max(1, Math.round(w / cell));
+  const rows = Math.max(1, Math.round(h / cell));
+  const order = [...CHARA_IMAGES].sort(() => Math.random() - 0.5);
+  const rand = (min, max) => min + Math.random() * (max - min);
+
+  const imgs = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const img = document.createElement('img');
+      img.className = 'bg-chara';
+      img.src = order[imgs.length % order.length];
+      img.alt = '';
+      img.style.left = `${((c + rand(0.2, 0.8)) / cols) * 100}%`;
+      img.style.top = `${((r + rand(0.2, 0.8)) / rows) * 100}%`;
+      img.style.width = `${rand(8, 11)}vmin`;
+      img.style.rotate = `${rand(-20, 20)}deg`;
+      imgs.push(img);
+    }
+  }
+  el.bgCharas.replaceChildren(...imgs);
+}
+
 function renderGame() {
+  scatterCharas();
   const last = state.game.drawn[state.game.drawn.length - 1];
   el.rouletteNumber.textContent = last ?? '?';
   el.roulette.classList.remove('spinning', 'decided');
